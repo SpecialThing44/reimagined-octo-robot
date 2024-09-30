@@ -14,16 +14,16 @@ jobs:
       - uses: Garnercorp/build-actions/next-version@automatic-version-bumping
         id: bump
         with:
-          version_file_path: "package.json"
-          version_pattern: '"version": "(\d+\.\d+\.\d+)"'
+          version-file-path: "package.json"
+          version-pattern: '"version": "(\d+\.\d+\.\d+)"'
           major: major
           minor: minor
           debug: true
       - name: commit
         env:
           VERSION: ${{ steps.bump.outputs.version}}
-          OLD_VERSION: ${{ steps.bump.outputs.old_version}}
-          COMMIT_LOG: ${{ steps.bump.outputs.commit_message_file}}
+          OLD_VERSION: ${{ steps.bump.outputs.old-version}}
+          COMMIT_LOG: ${{ steps.bump.outputs.commit-log}}
           VERSION_PREFIX: '"version": "'
           VERSION_FILE: package.json
           GIT_NAME: Hello

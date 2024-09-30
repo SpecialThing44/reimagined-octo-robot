@@ -1,0 +1,43 @@
+name: Bump Version
+on:
+  push:
+    branches: "main"
+
+jobs:
+  auto-version:
+    name: bump version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Garnercorp/build-actions/next-version@automatic-version-bumping
+        id: bump
+        with:
+          version_file_path: "package.json"
+          version_pattern: '"version": "(\d+\.\d+\.\d+)"'
+          major: major
+          minor: minor
+          debug: true
+      - name: commit
+        env:
+          VERSION: ${{ steps.bump.outputs.version}}
+          OLD_VERSION: ${{ steps.bump.outputs.old_version}}
+          COMMIT_LOG: ${{ steps.bump.outputs.commit_message_file}}
+          VERSION_PREFIX: '"version": "'
+          VERSION_FILE: package.json
+          GIT_NAME: Hello
+          GIT_MAIL: world@example.com
+        run: |
+          git config --global user.name "$GIT_NAME"
+          git config --global user.email "$GIT_MAIL"
+          sed -i -e "s/$VERSION_PREFIX$OLD_VERSION/$VERSION_PREFIX$VERSION/g" $VERSION_FILE
+          git add -u
+          commit_message=$(mktemp)
+          (
+            echo "Update version to $VERSION"
+            echo
+            cat $COMMIT_LOG
+          ) >> $commit_message
+          git commit -F $commit_message
+          git push origin HEAD

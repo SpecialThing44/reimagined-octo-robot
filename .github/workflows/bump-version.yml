@@ -14,8 +14,8 @@ jobs:
       - uses: Garnercorp/build-actions/next-version@automatic-version-bumping
         id: bump
         with:
-          version-file-path: "package.json"
-          version-pattern: '"version": "(\d+\.\d+\.\d+)"'
+          version-file-path: "version.sbt"
+          version-pattern: 'ThisBuild / version := "(\d+\.\d+\.\d+)"'
           major: major
           minor: minor
           debug: true
@@ -24,14 +24,15 @@ jobs:
           VERSION: ${{ steps.bump.outputs.version}}
           OLD_VERSION: ${{ steps.bump.outputs.old-version}}
           COMMIT_LOG: ${{ steps.bump.outputs.commit-log}}
-          VERSION_PREFIX: '"version": "'
-          VERSION_FILE: package.json
+          VERSION_PREFIX: 'ThisBuild / version := "'
+          VERSION_FILE: version.sbt
           GIT_NAME: Hello
           GIT_MAIL: world@example.com
         run: |
+          set -x
           git config --global user.name "$GIT_NAME"
           git config --global user.email "$GIT_MAIL"
-          sed -i -e "s/$VERSION_PREFIX$OLD_VERSION/$VERSION_PREFIX$VERSION/g" $VERSION_FILE
+          perl -pi -e 's/$ENV{VERSION_PREFIX}$ENV{OLD_VERSION}/$ENV{VERSION_PREFIX}$ENV{VERSION}/g' "$VERSION_FILE"
           git add -u
           commit_message=$(mktemp)
           (

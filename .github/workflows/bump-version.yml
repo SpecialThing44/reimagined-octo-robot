@@ -11,34 +11,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: Garnercorp/build-actions/next-version@automatic-version-bumping
+      - uses: Garnercorp/build-actions/bump-version@automatic-version-bumping
         id: bump
         with:
+          version-type: "sbt"
           version-file-path: "version.sbt"
-          version-pattern: 'ThisBuild / version := "(\d+\.\d+\.\d+)"'
+          git-name: "User"
+          git-email: "user@example.com"
           major: major
           minor: minor
           debug: true
-      - name: commit
-        env:
-          VERSION: ${{ steps.bump.outputs.version}}
-          OLD_VERSION: ${{ steps.bump.outputs.old-version}}
-          COMMIT_LOG: ${{ steps.bump.outputs.commit-log}}
-          VERSION_PREFIX: 'ThisBuild / version := "'
-          VERSION_FILE: version.sbt
-          GIT_NAME: Hello
-          GIT_MAIL: world@example.com
-        run: |
-          set -x
-          git config --global user.name "$GIT_NAME"
-          git config --global user.email "$GIT_MAIL"
-          perl -pi -e 's/$ENV{VERSION_PREFIX}$ENV{OLD_VERSION}/$ENV{VERSION_PREFIX}$ENV{VERSION}/g' "$VERSION_FILE"
-          git add -u
-          commit_message=$(mktemp)
-          (
-            echo "Update version to $VERSION"
-            echo
-            cat $COMMIT_LOG
-          ) >> $commit_message
-          git commit -F $commit_message
-          git push origin HEAD

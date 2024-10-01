@@ -14,8 +14,8 @@ jobs:
       - uses: SpecialThing44/build-actions/bump-version@automatic-version-bumping
         id: bump
         with:
-          version-type: "sbt"
-          version-file-path: "version.sbt"
+          version-type: "node"
+          version-file-path: "package.json"
           git-name: "User"
           git-email: "user@example.com"
           major: major

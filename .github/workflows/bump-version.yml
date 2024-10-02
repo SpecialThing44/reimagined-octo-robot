@@ -11,7 +11,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: GarnerCorp/build-actions/bump-version@main
+      - uses: GarnerCorp/build-actions/bump-version@test-real-world
         id: bump
         with:
           version-type: "node"

@@ -14,8 +14,8 @@ jobs:
       - uses: GarnerCorp/build-actions/bump-version@automatic-version-bumping
         id: bump
         with:
-          version-type: "node"
-          version-file-path: "package.json"
+          version-type: "sbt"
+          version-file-path: "version.sbt"
           git-name: "User"
           git-email: "user@example.com"
           major: major

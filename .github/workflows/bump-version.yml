@@ -11,11 +11,11 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: GarnerCorp/build-actions/bump-version@bump-version-push-optional
+      - uses: GarnerCorp/build-actions/bump-version@main
         id: bump
         with:
-          version-type: "sbt"
-          version-file-path: "version.sbt"
+          version-type: "node"
+          version-file-path: "package.json"
           git-name: "User"
           git-email: "user@example.com"
           major: major
